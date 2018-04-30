@@ -1,0 +1,461 @@
+#ShadowRun Combat Project
+
+#Initiatives, Movement, Actions (Free Actions, Simple Actions, Complex Actions, Matrix Actions, Rigging Actions, Interrupt)
+
+def menu
+  puts "What you want to do?
+  
+  Initiative (I)
+  Movement (M)
+  Actions (A)
+  Combat (C)
+  
+  Exit (E)
+  "
+  type = gets.chomp.upcase
+  
+  case type
+    when "I"
+      initiative
+    when "M"
+      movement
+    when "A"
+      actionsMenu
+    when "C"
+      combatMenu
+    when "E"
+      exit!
+    else
+      puts "I do not understand that, Chum!"
+      menu
+    end
+end
+
+def initiative
+  puts "
+  Which kind of initiative are you looking for? 
+  
+  Physical (P)
+  Astral (A)
+  Rigging (R)
+  MatrixAR (MA)
+  MatrixCold (MC)
+  MatrixHot (MH)
+  
+  Menu (M)
+  "
+  type = gets.chomp.upcase
+  
+  case type
+    when "P", "R", "MA"
+      puts "Roll for #{type} initiative!
+      "
+      phys_ini
+    when "A"
+      puts "Roll for astral initiative!
+      "
+      ast_ini
+    when "MC"
+      puts "Roll for Matrix cold-sim initiative!
+      "
+      matrixCold
+    when "MH"
+      puts "Roll for Matrix hot-sim initiative!
+      "
+      matrixHot
+    when "M"
+      puts "Going back to the menu.
+      "
+      menu
+    else
+      puts "That's not a initiative type, Chum!
+      "
+      initiative
+  end
+end
+
+def movement
+  puts "
+  Are you looking for how much you Walk (W), Run (R) or Sprint (S)?
+  
+  /Remember the -2 while running to all your actions 
+  /+4 if you are charging C/C
+  /-2 vs Ranged against you -> -4 if your are sprinting
+  
+  Menu (M)
+  "
+  type = gets.chomp.upcase
+
+  case type
+    when "W"
+      result = attrib("AGILITY") * 2
+      puts "Your Walk rate is #{result}."
+    when "R"
+      result = attrib("AGILITY") * 4
+      puts "Your Run rate is #{result}."
+    when "S"
+      type = race
+      sprint = (attrib("AGILITY") * 4) + attrib("STRENGH")
+      if type == "Dwarf" || type == "Troll"
+        puts "Your sprint is #{sprint}/meter, #{type}!"
+      else
+        puts "Your sprint is #{sprint * 2}/meter, #{type}!"
+      end
+    when "M"
+      puts ""
+      menu
+    else
+      puts "I do not understand that, Chum!"
+  end
+  puts ""
+  movement
+end
+
+def actionsMenu
+  puts "
+  Which actions would you like to know about?
+  
+  Free Actions (FA)
+  Simple Actions (SA)
+  Complex Actions (CA)
+  Rigging (R)
+  Interrupt (I)
+  Matrix Actions (MA)
+  
+  Menu (M)
+  "
+  type = gets.chomp.upcase
+  
+  case type
+    when "FA"
+      puts ""
+      freeact
+    when "SA"
+      puts ""
+      simple
+    when "CA"
+      puts ""
+      complex
+    when "I"
+      puts ""
+      interrupt
+    when "M"
+      puts ""
+      menu
+    else
+      puts "I did not get that, chum!
+      "
+      actionsMenu
+  end
+end
+
+def freeact
+  puts "Free Actions only when you are not surprised, Chum. Which one would you like to know about?
+  
+  -Call a Shot // -4, Aim for a vulnerable spot
+  -Drop Object // Drop an item, chance to get broken
+  -Drop Prone // Knell or prone
+  -Run // A run action, see movement for this, Chum!
+  -Speak/Text/Transmit Phrase
+  -Eject Smartgun Clip
+  -Change Linked Device Mode // Activate, deactivate or switch the mode on any device that he/she is linked
+  -Multiple Attacks // Multiple attacks splitting the dice pool. Single Shots on Fire Weapons chum!
+  
+  With explanation (type it for more):
+  
+  Gesture (G)
+  
+  Actions Menu (AM)
+  "
+  type = gets.chomp.upcase
+  
+  case type
+    when "G"
+      puts "Do gestures with your hands, for tactic stuff, chum. By the way, an enemy could test Intuition (2) to try to figure out what are you trying to do"
+    when "AM"
+      puts ""
+      actionsMenu
+    else
+      puts "I do not get that, chum"
+  end
+  puts ""
+  freeact
+end
+
+def simple
+  puts "Single actions, you can take two of these, but only one of them could be attack. A free action could be taken too. Which one would you like to know about?
+  
+  Activate Focus // Use the focus device
+  Reckless SpellCasting // Faster way to cast a spell at higher Drain. +3 Drain Value for each spell
+  Call Spirit // Call the spirit if it is already summoned
+  Shift Perception // Perception to or from the Astral Space
+  Command Spirit // Issue a command to a Spirit
+  Dismiss Spirit // Frees the Spirit
+  Observe in Detail // Perception Test
+  Change Device Mode // Activate, deactivate or switch the mode on any simple device
+  Insert Clip
+  Remove Clip
+  Change Gun Mode // Change gun mode
+  Fire Semi-Auto, Single-Shot, Burst Fire or Full-Auto // Fires the weapon (Burst Fire -> 3 bullets | Full-Auto -> 6 bullets)
+  Quick Draw // Weapon Skill + Reaction [Physical] (3), (1) if in a Quick Draw Holster
+  Ready Weapon // Weapon must be ready to be used. Ready small throw weapon = AGILITY/2 for each action
+  Take Aim // +1 to dice pool or Accuracy, WILLPOWER/2 limit of Take Aim
+  Fire Bow // Attack with a bow
+  Stand up // Stand up from kneel or prone position. If wounded, Body + Willpower (2) test.
+  Take Cover // Take cover to gain the cover bonus (+4 Defense if cover more than 50%)
+  Throw Weapon // Attack with a Thrown weapon
+  Pick UP/Put Down Object // Without the chance to break it
+  Use simple Device
+ 
+  Actions Menu (AM)
+  "
+  type = gets.chomp.upcase
+  
+  case type
+    when "AM"
+      actionsMenu
+    else
+      puts "I didn't understand that, Chum!"
+  end
+  simple
+end
+
+def interrupt
+  puts "Which one?
+  
+  Block // -5 Initiative, add your Unarmed Combat Skill to your defense test for the Full Combat Turn
+  Dodge // -5 Initiative, add your Gymnastic Skill to your defende test for the Full Combat Turn
+  Hit the Dirt // -5 Initiative, when caught by suppressive fire, if Free Action already spent, you prone without rolling
+  Intercept // -5 Initiative, Free Melee Attack (if enough Initiative points) if charact pass close to you or he tries to go out from the C/C
+  Parry // -5 Initiative, add Melee Weapon Skill to the defense test for the Full Combat Turn
+  
+  With explanation:
+  
+  Full Defense (FD)
+  
+  Actions Menu (AM)
+  "
+  type = gets.chomp.upcase
+  
+  case type
+    when "FD"
+      puts "-10 Initiative, add your Willpower (#{attrib("WILLPOWER")}) to the defense test for the Full Combat Turn, can be done anytime (not surprised and enough Initiative points), can be done several times"
+    when "AM"
+      puts ""
+      actionsMenu
+    else
+      puts "Are you sure that's and action, Chum?"
+  end
+  puts ""
+  interrupt
+end
+
+def complex
+  puts "Complex Actions, only one of them can be took. A free action could be taken too.
+  
+  Astral Projection // Shift the consciousness to the Astral Plane
+  Cast Spell
+  Banish Spirit // Banishing Constest with a Spirit
+  Summoning // A spirit
+  Fire Full-Auto Weapon // Full-Auto uses 10 bullets
+  Fire Long Burst or Semi-Auto Burst
+  Fire Mounted or Vehicle Weapon
+  Reload Firearm // Reload belt, break action, cylinder, drum, internal, muzzle o use speed loaders
+  Load and Fire Bow
+  Melee Attack
+  Rigger Jump In
+  Sprint // See Movement
+  Use Skill
+  
+  Actions Menu (AM)
+  "
+  type = gets.chomp.upcase
+
+  case type
+    when "AM"  
+      actionsMenu
+    else
+      puts "I didn't understand that, Chum!"
+  end
+end
+
+def combatMenu
+  puts "Welcome to the Combat Menu
+  
+  Accuracy // Maximum amount of hits you can use [Limit]
+  Armor // Damage test -> Armor + Body, if Damage > than Armor (- Armor penetration) = Physical damage
+  Net hits // If attack exceed defense, the diference are net hits, but remember the limit
+  Firearms Firing Modes (FFM) 
+  Damage Types (DT)
+  Combat Test (CT)
+  
+  Menu (M)
+  "
+  type = gets.chomp.upcase
+
+  case type
+    when "DT"
+      puts "
+      Physical: If exceeded, if over BODY atribute, character die
+      Fall: Physical. If more than 3 meters, DV = 1 each meter, AP -4. Body + Armor to resist
+      Fatigue: Stun. Body + Armor to resist
+      Stuns: If exceeded, every 2 stun hits, 1 physical damage
+      Acid: Physical, Reduce Armor by 1 if not washed or removed
+      Cold: Physical, Armor test: if not hits, armor breaks
+      Electricity: Stun and/or Physical, -1 dice pool, defense test and actions (no damage resistance) for 1 combat turn and -5 initiative. If attacted again, only extend the combat turns
+      Fire: Physical, Armor + Fire Resist - Fire AP (net hits fire attack), fire damage start by 3 DV, INTUITION + AGILITY to reduce fire DV. This continue until fire damage is removed
+      "
+    when "FFM"
+      puts "
+      SS - Single Shot -> 1 bullet, no recoil, no defense modifiers
+      SA - Semi  Automatic -> 1 bullet, no recoil, no defense modifiers
+      SB - Semi Burst -> 3 bullets, recoil, -2 defense modifier, complex action
+      BF - Burst Fire -> 3 bullets, recoil, -2 defense modifier, simple action
+      LB - Long Burst -> 6 bullets, recoil, -5 defense modifier, complex action
+      FA - Full Auto -> 10 bullets, recoil, -9 defense modifier, complex action
+      Suppressive fire -> Pag. 179
+      
+      Shotguns -> 
+      "
+    when "CT"
+      combat
+    when "M"
+      menu
+    else 
+      puts "I didn't understand that Chum!
+      "
+  end
+  combatMenu
+end
+
+def phys_ini
+  ini = attrib("REACTION") + attrib("INTUITION") + dice(1)
+  puts "Your initiative is #{ini}!"
+  initiative
+end
+  
+def ast_ini
+  ini = (2 * attrib("INTUITION")) + dice(2)
+  puts "Your astral initiative is #{ini}!"
+  initiative
+end
+
+def matrixCold
+  ini = attrib("DATA PROCESSING") + attrib("INTUITION") + dice(3)
+  puts "Your Matrix cold-sim initiative is #{ini}!"
+  initiative
+end
+
+def matrixHot
+  ini = attrib("DATA PROCESSING") + attrib("INTUITION") + dice(4)
+  puts "Your Matrix hot-sim initiative is #{ini}!"
+  initiative
+end
+  
+def race
+  puts "What RACE are you?"
+  type = gets.chomp.capitalize
+  if ["Dwarf", "Troll", "Elf", "Human", "Ork"].include? type
+    return type
+  else
+    puts "That's not a ShadowRun race Chum!"
+    race
+  end
+end
+  
+def attrib(my_attribute)
+  puts "
+  What is your #{my_attribute}?"
+  gets.chomp.to_i
+end
+  
+def dice(rolls)
+  result = 0
+  rolls.times do
+    result += (1 + rand(5))
+  end
+  return result
+end
+
+def combat
+  
+  puts "Combat sequence:
+  
+  Start (S)
+  
+  Combat Menu (CM)
+  "
+  
+  type = gets.chomp.upcase
+  
+  case type
+    
+    when "S"  
+      puts "Any Attack Modifiers?"
+      attack_mod = gets.chomp.to_i
+      puts "Attack limit or Accuracy?"
+      attack_lim = gets.chomp.to_i
+      puts "Defend Modifiers?"
+      defend_mod = gets.chomp.to_i
+      attack = 0
+      defend = 0
+      result = 0
+      net_hits = 0
+      apply_effect = 0
+          
+      puts "
+        
+      Step 1: Declare Attack
+      "
+      attack = attrib("Combat Skill") + attrib("Combat Atribute Related") + attack_mod
+      defend = defenseSelection + defend_mod
+      puts "
+      Attack // Combat SKill + Attribute +/- Modifiers [Limit] = #{attack} [#{attack_lim}]
+      Defend // Defense = #{defend} 
+      Now roll the dices and remember the limits.
+      How many net hits you got?
+      "
+      net_hits = gets.chomp.to_i
+      
+      puts "Add your net hits (#{net_hits}) to your Damage Value, and defender, roll ARMOR + BODY to see how many you resist. That's all chum!"
+      
+    when "CM"
+      combatMenu
+    else 
+      puts "I didn't understand that Chum!
+      "
+  end
+  combat
+end
+
+def defenseSelection
+  puts "
+  Which defense are you going to use?
+  Free (F)
+  Block (B)
+  Dodge (D)
+  Parry (P)
+  Full Defense (FD)
+  Surprised (S)"
+  type = gets.chomp.upcase
+  
+  case type
+    when "F"
+      defend = attrib("REACTION") + attrib("INTUITION")
+    when "B"
+      defend = attrib("REACTION") + attrib("INTUITION") + attrib("UNNARMED COMBAT SKILL")
+    when "D"
+      defend = attrib("REACTION") + attrib("INTUITION") + attrib("GYMNASTIC SKILL")
+    when "P"
+      defend = attrib("REACTION") + attrib("INTUITION") + attrib("MELEE WEAPON SKILL")
+    when "FD"
+      defend = attrib("REACTION") + attrib("INTUITION") + attrib("WILLPOWER")
+    when "S"
+      defend = 0
+    else
+      puts "That's not a defense type, chum!"
+      defenseSelection
+  end
+end
+
+menu
